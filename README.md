@@ -7,6 +7,9 @@ Landing page institucional para firma de abogados con diseño premium.
 - Animaciones GSAP
 - Video hero
 - Formulario de contacto
+- Bento grid interactivo
+- Equipo con hover effects
+- Floating WhatsApp CTA
 
 ## Deploy
-https://lexcorp.vercel.app
+https://lexcorp-firma.vercel.app
