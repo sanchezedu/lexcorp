@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexCorp | Firma de Abogados Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        :root { --navy: #0a1628; --charcoal: #1a1a2e; --gold: #c9a227; --silver: #a8b2c1; --off-white: #f4f4f5; }
+        body { font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); overflow-x: hidden; }
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .sans { font-family: 'Inter', sans-serif; }
+        .bg-navy { background-color: var(--navy); }
+        .bg-charcoal { background-color: var(--charcoal); }
+        .bg-gold { background-color: var(--gold); }
+        .text-gold { color: var(--gold); }
+        
+        .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(10, 22, 40, 0.92) 0%, rgba(26, 26, 46, 0.85) 100%); z-index: 1; }
+        
+        .btn-gold { background: linear-gradient(135deg, #c9a227 0%, #e6b800 50%, #c9a227 100%); color: var(--navy); font-weight: 600; letter-spacing: 0.05em; transition: all 0.4s ease; position: relative; overflow: hidden; }
+        .btn-gold::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: left 0.5s ease; }
+        .btn-gold:hover::before { left: 100%; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(201, 162, 39, 0.4); }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.4s ease; }
+        .glass-card:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--gold); box-shadow: 0 20px 60px rgba(201, 162, 39, 0.2); transform: translateY(-8px); }
+        
+        .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 280px); gap: 1.5rem; }
+        .bento-item { position: relative; overflow: hidden; cursor: pointer; }
+        .bento-item.large { grid-column: span 2; grid-row: span 2; }
+        .bento-item.wide { grid-column: span 2; }
+        
+        .bento-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem; background: linear-gradient(to top, rgba(10, 22, 40, 0.95), transparent); transform: translateY(20px); opacity: 0; transition: all 0.5s ease; }
+        .bento-item:hover .bento-content { transform: translateY(0); opacity: 1; }
+        .bento-icon { font-size: 3rem; margin-bottom: 1rem; transition: transform 0.4s ease; }
+        .bento-item:hover .bento-icon { transform: scale(1.1); }
+        
+        .stat-number { font-family: 'Playfair Display', serif; font-size: 4rem; font-weight: 700; color: var(--gold); line-height: 1; }
+        
+        .team-card { position: relative; overflow: hidden; cursor: pointer; }
+        .team-card img { transition: transform 0.6s ease; filter: grayscale(100%); }
+        .team-card:hover img { transform: scale(1.08); filter: grayscale(0%); }
+        .team-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, var(--navy), transparent); padding: 2rem; transform: translateY(100%); transition: transform 0.5s ease; }
+        .team-card:hover .team-overlay { transform: translateY(0); }
+        
+        .marquee-container { overflow: hidden; background: var(--navy); padding: 2rem 0; }
+        .marquee-track { display: flex; animation: marquee 30s linear infinite; }
+        .marquee-item { flex-shrink: 0; padding: 0 3rem; opacity: 0.5; filter: grayscale(100%); transition: all 0.3s ease; }
+        .marquee-item:hover { opacity: 1; filter: grayscale(0%); }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        
+        .testimonial-card { background: white; padding: 3rem; box-shadow: 0 10px 60px rgba(0,0,0,0.08); text-align: center; }
+        .testimonial-text { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic; line-height: 1.8; color: var(--charcoal); }
+        
+        .floating-cta { position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; display: flex; align-items: center; gap: 0.75rem; background: linear-gradient(135deg, #25D366, #128C7E); color: white; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; box-shadow: 0 10px 40px rgba(37, 211, 102, 0.4); transition: all 0.3s ease; text-decoration: none; }
+        .floating-cta:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 50px rgba(37, 211, 102, 0.5); }
+        
+        .form-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: white; padding: 1rem 1.25rem; transition: all 0.3s ease; width: 100%; }
+        .form-input:focus { outline: none; border-color: var(--gold); background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(201, 162, 39, 0.2); }
+        .form-input::placeholder { color: rgba(255, 255, 255, 0.5); }
+        
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--navy); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="navbar">
+        <div class="absolute inset-0 bg-navy/95 backdrop-blur-md"></div>
+        <div class="max-w-7xl mx-auto px-6 py-4 relative">
+            <div class="flex items-center justify-between">
+                <a href="#" class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gold flex items-center justify-center"><span class="serif text-2xl font-bold text-navy">L</span></div>
+                    <span class="serif text-2xl font-bold text-white">LexCorp</span>
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#practicas" class="text-white/80 hover:text-gold transition-colors sans font-medium">Práctica</a>
+                    <a href="#valor" class="text-white/80 hover:text-gold transition-colors sans font-medium">Nosotros</a>
+                    <a href="#casos" class="text-white/80 hover:text-gold transition-colors sans font-medium">Casos</a>
+                    <a href="#equipo" class="text-white/80 hover:text-gold transition-colors sans font-medium">Equipo</a>
+                    <a href="#contacto" class="btn-gold px-6 py-3 rounded-sm text-sm uppercase tracking-wider">Consulta</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-business-team-in-a-meeting-room-4803-large.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            <p class="sans text-gold tracking-[0.3em] uppercase text-sm mb-6 gsap-hero">LexCorp</p>
+            <h1 class="serif text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-8 gsap-hero">
+                Donde el Derecho<br><span class="text-gold">Encuentra su Voz</span>
+            </h1>
+            <p class="sans text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-12 font-light gsap-hero">
+                Protegemos sus intereses con más de dos décadas de excelencia legal. 
+                Su tranquilidad es nuestro compromiso.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center gsap-hero">
+                <a href="#contacto" class="btn-gold px-10 py-4 rounded-sm text-lg uppercase tracking-wider">Agendar Consulta Confidencial</a>
+                <a href="#valor" class="border border-white/30 text-white px-10 py-4 rounded-sm text-lg uppercase tracking-wider hover:bg-white/10 transition-all">Conocer Más</a>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10">
+            <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
+                <div class="w-1 h-3 bg-gold rounded-full animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Áreas de Práctica -->
+    <section id="practicas" class="py-24 bg-navy">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <p class="sans text-gold tracking-[0.2em] uppercase text-sm mb-4">Especialidades</p>
+                <h2 class="serif text-4xl md:text-5xl font-bold text-white mb-6">Áreas de Práctica</h2>
+                <p class="sans text-white/60 max-w-2xl mx-auto">Expertise legal diversificado para resolver sus desafíos más complejos</p>
+            </div>
+            <div class="bento-grid">
+                <div class="bento-item large glass-card rounded-2xl" style="background: linear-gradient(135deg, #1e3a5f, #0a1628);">
+                    <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-8">
+                        <div class="bento-icon">⚖️</div>
+                        <h3 class="serif text-2xl font-bold text-white mb-2">Derecho Corporativo</h3>
+                        <p class="sans text-white/60">Estrategia legal empresarial</p>
+                    </div>
+                    <div class="bento-content">
+                        <h3 class="serif text-2xl font-bold text-gold mb-2">Derecho Corporativo</h3>
+                        <p class="sans text-white/80">Asesoría integral en fusiones, adquisiciones, gobierno corporativo y estructuración societaria.</p>
+                    </div>
+                </div>
+                <div class="bento-item glass-card rounded-2xl" style="background: linear-gradient(135deg, #2d2d4a, #1a1a2e);">
+                    <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-6">
+                        <div class="bento-icon">🏛️</div>
+                        <h3 class="serif text-xl font-bold text-white mb-2">Asesoría Municipal</h3>
+                    </div>
+                    <div class="bento-content">
+                        <h3 class="serif text-xl font-bold text-gold mb-2">Asesoría Municipal</h3>
+                        <p class="sans text-white/80 text-sm">Gestión de permisos, licencias y relaciones con entidades gubernamentales.</p>
+                    </div>
+                </div>
+                <div class="bento-item glass-card rounded-2xl" style="background: linear-gradient(135deg, #3d3d5c, #1a1a2e);">
+                    <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-6">
+                        <div class="bento-icon">📋</div>
+                        <h3 class="serif text-xl font-bold text-white mb-2">Reportes Legales</h3>
+                    </div>
+                    <div class="bento-content">
+                        <h3 class="serif text-xl font-bold text-gold mb-2">Reportes Legales</h3>
+                        <p class="sans text-white/80 text-sm">Due diligence, auditorías legales y reportes de cumplimiento normativo.</p>
+                    </div>
+                </div>
+                <div class="bento-item wide glass-card rounded-2xl" style="background: linear-gradient(135deg, #1a3a5f, #0a1628);">
+                    <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-8">
+                        <div class="bento-icon">⚡</div>
+                        <h3 class="serif text-2xl font-bold text-white mb-2">Litigios y Arbitraje</h3>
+                        <p class="sans text-white/60">Defensa de intereses en tribunales</p>
+                    </div>
+                    <div class="bento-content">
+                        <h3 class="serif text-2xl font-bold text-gold mb-2">Litigios y Arbitraje</h3>
+                        <p class="sans text-white/80">Representación estratégica en disputas comerciales. Más de $50M recuperados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Valor de la Firma -->
+    <section id="valor" class="py-24 bg-charcoal">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <p class="sans text-gold tracking-[0.2em] uppercase text-sm mb-4">¿Por qué LexCorp?</p>
+                    <h2 class="serif text-4xl md:text-5xl font-bold text-white mb-8">Más de 20 años<br><span class="text-gold">definiendo la excelencia legal</span></h2>
+                    <p class="sans text-white/70 text-lg mb-8 leading-relaxed">En LexCorp, combinamos tradición jurídica con innovación estratégica. Cada caso es único, cada solución es personalizada.</p>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="2500">0</div>
+                            <p class="sans text-white/60 mt-2">Casos Resueltos</p>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="150">0</div>
+                            <p class="sans text-white/60 mt-2">Millones Recuperados</p>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="22">0</div>
+                            <p class="sans text-white/60 mt-2">Años de Experiencia</p>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="98">0</div>
+                            <p class="sans text-white/60 mt-2">% Clientes Satisfechos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-gold/20 rounded-2xl"></div>
+                    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80" alt="Firma legal" class="relative rounded-2xl shadow-2xl">
+                    <div class="absolute -bottom-6 -left-6 bg-gold p-6 rounded-lg">
+                        <p class="serif text-navy font-bold text-2xl">#1</p>
+                        <p class="sans text-navy/70 text-sm">en Excelencia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Casos de Éxito -->
+    <section id="casos" class="py-24 bg-navy overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 mb-16">
+            <div class="text-center">
+                <p class="sans text-gold tracking-[0.2em] uppercase text-sm mb-4">Track Record</p>
+                <h2 class="serif text-4xl md:text-5xl font-bold text-white mb-6">Casos de Éxito</h2>
+            </div>
+        </div>
+        <div class="flex gap-6 overflow-x-auto pb-8 px-6" style="scrollbar-width: none;">
+            <div class="flex-shrink-0 w-96">
+                <div class="testimonial-card rounded-2xl h-full">
+                    <div class="w-16 h-16 bg-navy rounded-full flex items-center justify-center mx-auto mb-6"><span class="text-3xl">🏢</span></div>
+                    <h3 class="serif text-xl font-bold text-navy mb-4">Defensa Corporativa</h3>
+                    <p class="sans text-gray-600 mb-6">Empresa enfrentaba demanda por $2.5M. Absolución total lograda.</p>
+                    <div class="border-t pt-4">
+                        <p class="serif text-gold text-2xl font-bold">$2.5M</p>
+                        <p class="sans text-gray-500 text-sm">Ahorrado para el cliente</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-shrink-0 w-96">
+                <div class="testimonial-card rounded-2xl h-full">
+                    <div class="w-16 h-16 bg-navy rounded-full flex items-center justify-center mx-auto mb-6"><span class="text-3xl">📝</span></div>
+                    <h3 class="serif text-xl font-bold text-navy mb-4">Contratos Públicos</h3>
+                    <p class="sans text-gray-600 mb-6">Asesoría en licitaciones por $15M. Cero impugnaciones.</p>
+                    <div class="border-t pt-4">
+                        <p class="serif text-gold text-2xl font-bold">$15M</p>
+                        <p class="sans text-gray-500 text-sm">En contratos gestionados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-shrink-0 w-96">
+                <div class="testimonial-card rounded-2xl h-full">
+                    <div class="w-16 h-16 bg-navy rounded-full flex items-center justify-center mx-auto mb-6"><span class="text-3xl">⚖️</span></div>
+                    <h3 class="serif text-xl font-bold text-navy mb-4">Arbitraje Internacional</h3>
+                    <p class="sans text-gray-600 mb-6">Disputa resuelta en 6 meses. Award a favor del cliente.</p>
+                    <div class="border-t pt-4">
+                        <p class="serif text-gold text-2xl font-bold">$8.2M</p>
+                        <p class="sans text-gray-500 text-sm">Award Recuperado</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-shrink-0 w-96">
+                <div class="testimonial-card rounded-2xl h-full">
+                    <div class="w-16 h-16 bg-navy rounded-full flex items-center justify-center mx-auto mb-6"><span class="text-3xl">🔒</span></div>
+                    <h3 class="serif text-xl font-bold text-navy mb-4">Compliance</h3>
+                    <p class="sans text-gray-600 mb-6">Programa de cumplimiento implementado. Auditoría aprobada.</p>
+                    <div class="border-t pt-4">
+                        <p class="serif text-gold text-2xl font-bold">100%</p>
+                        <p class="sans text-gray-500 text-sm">Cumplimiento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Equipo -->
+    <section id="equipo" class="py-24 bg-charcoal">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <p class="sans text-gold tracking-[0.2em] uppercase text-sm mb-4">Liderazgo</p>
+                <h2 class="serif text-4xl md:text-5xl font-bold text-white mb-6">Nuestro Equipo</h2>
+                <p class="sans text-white/60 max-w-2xl mx-auto">Profesionales de élite con décadas de experiencia</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="team-card rounded-2xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80" alt="Socio Principal" class="w-full h-96 object-cover">
+                    <div class="team-overlay">
+                        <h3 class="serif text-2xl font-bold text-white mb-1">Dr. Roberto Sánchez</h3>
+                        <p class="sans text-gold text-sm mb-3">Socio Fundador</p>
+                        <p class="sans text-white/70 text-sm mb-4">Ph.D. en Derecho Corporativo. 25 años de experiencia.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-gold hover:text-white transition-colors"><span>LinkedIn</span>
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="team-card rounded-2xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80" alt="Socia" class="w-full h-96 object-cover">
+                    <div class="team-overlay">
+                        <h3 class="serif text-2xl font-bold text-white mb-1">Dra. Carolina Mendoza</h3>
+                        <p class="sans text-gold text-sm mb-3">Socia - Derecho Corporativo</p>
+                        <p class="sans text-white/70 text-sm mb-4">Especialista en M&A y estructuración societaria.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-gold hover:text-white transition-colors"><span>LinkedIn</span>
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="team-card rounded-2xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=80" alt="Socio" class="w-full h-96 object-cover">
+                    <div class="team-overlay">
+                        <h3 class="serif text-2xl font-bold text-white mb-1">Dr. Andrés Vargas</h3>
+                        <p class="sans text-gold text-sm mb-3">Socio - Litigios</p>
+                        <p class="sans text-white/70 text-sm mb-4">Trial lawyer con más de 100 juicios favorables.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-gold hover:text-white transition-colors"><span>LinkedIn</span>
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prueba Social -->
+    <section class="py-0">
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <div class="marquee-item"><h3 class="serif text-2xl text-white font-bold">TechCorp</h3></div>
+                <div class="marquee-item"><h3 class="serif text-2xl text-white font-bold">Grupo Azul</h3></div>
+                <div class="marquee-item"><h3 class="serif text-2xl text-white font-bold">Finanzas Plus</h3></div>
+                <div class="marquee-item"><h3 class="serif text-2xl text-white font-bold">Inmobilia</h3></div>
+                <div class="marquee-item"><h3 class="serif text-2xl text-white font-bold">Corporación XR</h3></div>
+                <div class="marquee-item"><h3 class="serif text-2xl text-white font-bold">Grupo Verde</h3></div>
+                <div class="marquee-item"><h3 class="serif text-2xl text-white font-bold">TechCorp</h3></div>
+                <div class="marquee-item"><h3 class="serif text-2xl text-white font-bold">Grupo Azul</h3></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonios -->
+    <section class="py-24 bg-navy">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <svg class="w-16 h-16 text-gold mx-auto mb-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+            <p class="testimonial-text mb-8">"LexCorp transformó nuestra situación legal compleja en una resolución favorable. Su profesionalismo y dedicación son incomparables. Los recomiendo sin reservas."</p>
+            <p class="sans text-white font-semibold">— Director General, Corporación Multinacional</p>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="py-24 bg-charcoal">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16">
+                <div>
+                    <p class="sans text-gold tracking-[0.2em] uppercase text-sm mb-4">Contacto</p>
+                    <h2 class="serif text-4xl md:text-5xl font-bold text-white mb-8">Agende su<br><span class="text-gold">Consulta</span></h2>
+                    <p class="sans text-white/70 text-lg mb-8">Su primer paso hacia la resolución legal. Complete el formulario y un abogado senior le contactará dentro de 24 horas.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center"><svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
+                            <div><p class="sans text-white/50 text-sm">Teléfono</p><p class="sans text-white font-semibold">+1 (555) 123-4567</p></div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center"><svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                            <div><p class="sans text-white/50 text-sm">Email</p><p class="sans text-white font-semibold">contacto@lexcorp.legal</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <form class="space-y-6">
+                        <div>
+                            <input type="text" placeholder="Nombre completo" class="form-input rounded-lg">
+                        </div>
+                        <div>
+                            <input type="email" placeholder="Correo electrónico" class="form-input rounded-lg">
+                        </div>
+                        <div>
+                            <input type="tel" placeholder="Teléfono" class="form-input rounded-lg">
+                        </div>
+                        <div>
+                            <select class="form-input rounded-lg appearance-none cursor-pointer">
+                                <option value="" class="text-navy">Área de interés</option>
+                                <option value="corporativo" class="text-navy">Derecho Corporativo</option>
+                                <option value="municipal" class="text-navy">Asesoría Municipal</option>
+                                <option value="litigios" class="text-navy">Litigios y Arbitraje</option>
+                                <option value="reportes" class="text-navy">Reportes Legales</option>
+                            </select>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <input type="checkbox" id="terminos" class="w-5 h-5 mt-1 rounded border-white/30 bg-transparent text-gold focus:ring-gold">
+                            <label for="terminos" class="sans text-white/70 text-sm">Acepto los términos de confidencialidad y privacidad</label>
+                        </div>
+                        <button type="submit" class="btn-gold w-full py-4 rounded-lg text-lg uppercase tracking-wider">Enviar Solicitud</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-navy py-16 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 bg-gold flex items-center justify-center"><span class="serif text-2xl font-bold text-navy">L</span></div>
+                        <span class="serif text-2xl font-bold text-white">LexCorp</span>
+                    </div>
+                    <p class="sans text-white/60 mb-6">Más de dos décadas protegiendo los intereses de nuestros clientes con excelencia y profesionalismo.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-gold hover:text-navy transition-all"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-gold hover:text-navy transition-all"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="serif text-lg font-bold text-white mb-6">Enlaces Rápidos</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#practicas" class="sans text-white/60 hover:text-gold transition-colors">Áreas de Práctica</a></li>
+                        <li><a href="#valor" class="sans text-white/60 hover:text-gold transition-colors">Nosotros</a></li>
+                        <li><a href="#equipo" class="sans text-white/60 hover:text-gold transition-colors">Equipo</a></li>
+                        <li><a href="#contacto" class="sans text-white/60 hover:text-gold transition-colors">Contacto</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="serif text-lg font-bold text-white mb-6">Servicios</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="sans text-white/60 hover:text-gold transition-colors">Derecho Corporativo</a></li>
+                        <li><a href="#" class="sans text-white/60 hover:text-gold transition-colors">Litigios</a></li>
+                        <li><a href="#" class="sans text-white/60 hover:text-gold transition-colors">Arbitraje</a></li>
+                        <li><a href="#" class="sans text-white/60 hover:text-gold transition-colors">Compliance</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="serif text-lg font-bold text-white mb-6">Ubicación</h4>
+                    <p class="sans text-white/60 mb-2">Av. Principal 1234</p>
+                    <p class="sans text-white/60 mb-2">Ciudad, Estado 12345</p>
+                    <p class="sans text-white/60">México</p>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="sans text-white/40 text-sm">© 2026 LexCorp. Todos los derechos reservados.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="sans text-white/40 text-sm hover:text-gold transition-colors">Política de Privacidad</a>
+                    <a href="#" class="sans text-white/40 text-sm hover:text-gold transition-colors">Términos de Uso</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating CTA -->
+    <a href="https://wa.me/1234567890" class="floating-cta" target="_blank">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span>Consulta WhatsApp</span>
+    </a>
+
+    <script>
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Hero animations
+        gsap.from('.gsap-hero', {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: 'power3.out'
+        });
+        
+        // Stats counter animation
+        gsap.utils.toArray('.stat-number').forEach(stat => {
+            const target = parseInt(stat.dataset.target);
+            gsap.fromTo(stat, 
+                { textContent: 0 },
+                {
+                    textContent: target,
+                    duration: 2,
+                    ease: 'power2.out',
+                    snap: { textContent: 1 },
+                    scrollTrigger: {
+                        trigger: stat,
+                        start: 'top 80%',
+                    }
+                }
+            );
+        });
+        
+        // Navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-navy/98', 'shadow-lg');
+            } else {
+                navbar.classList.remove('bg-navy/98', 'shadow-lg');
+            }
+        });
+    </script>
+</body>
+</html>
