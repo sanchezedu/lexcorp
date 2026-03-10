@@ -567,6 +567,46 @@
                 }
             });
         });
+        
+        // Form submission
+        document.querySelector('.contact-form form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Gracias por contactarnos. Un abogado especializado te contactar&aacute; en breve.');
+        });
+        
+        // Video modal
+        const videoBtn = document.querySelector('.video-btn');
+        if(videoBtn) {
+            videoBtn.addEventListener('click', function() {
+                alert('Video en reproducci&oacute;n...');
+            });
+        }
+        
+        // Counter animation en secciones
+        gsap.utils.toArray('.bento-item, .testimonial-card, .team-card').forEach((el, i) => {
+            gsap.from(el, {
+                scrollTrigger: { trigger: el, start: 'top 85%' },
+                y: 50, opacity: 0, duration: 0.8, delay: i * 0.1, ease: 'power3.out'
+            });
+        });
+        
+        // Navbar link active
+        const sections = document.querySelectorAll('section[id]');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('text-gold');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('text-gold');
+                }
+            });
+        });
     </script>
 </body>
 </html>
